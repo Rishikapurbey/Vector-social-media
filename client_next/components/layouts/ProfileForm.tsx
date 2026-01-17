@@ -57,14 +57,14 @@ export default function ProfileForm() {
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
 
             <div className="w-full">
-                <p className="text-[1.2rem] font-semibold text-left">Set a username</p>
+                <p className="font-semibold text-left">Set a username</p>
                 <div className="my-3 border border-black/10 dark:border-white/10 bg-black/3 flex items-center px-3 h-10 rounded-lg gap-2">
                     <p>@</p>
                     <input type="text" placeholder="demouser09" className="h-full w-full outline-none" />
                 </div>
-                <p className="font-semibold text-[1.2rem]">Set a bio</p>
+                <p className="font-semibold">Set a bio</p>
                 <textarea placeholder="Enter your bio (30 words max)" className="w-full border outline-0 px-3 py-1 rounded-md mt-2 h-10 bg-black/3"/>
-                <p className="font-semibold text-[1.2rem] mt-3">Set a description</p>
+                <p className="font-semibold mt-3">Set a description</p>
                 <textarea placeholder="Enter your bio (200 words max)" className="w-full border outline-0 px-3 py-1 rounded-md mt-2 h-20 bg-black/3"/>
                 <Button className="h-10 mt-2 w-full cursor-pointer bg-blue-500 hover:bg-blue-600">
                     Continue
