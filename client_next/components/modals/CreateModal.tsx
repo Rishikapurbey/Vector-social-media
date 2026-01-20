@@ -11,12 +11,8 @@ type CreateModalProps = {
     onPostCreated: (post: any) => void;
 };
 
-export default function CreateModal({
-    onClose,
-    onPostCreated
-}: CreateModalProps) {
+export default function CreateModal({onClose,onPostCreated}: CreateModalProps) {
     const [visible, setVisible] = useState(false);
-
     const [intent, setIntent] = useState("");
     const [content, setContent] = useState("");
     const [loading, setLoading] = useState(false);
@@ -36,10 +32,7 @@ export default function CreateModal({
         e.preventDefault();
         try {
             setLoading(true);
-            const { data } = await axios.post(
-                BACKEND_URL + "/api/posts",
-                { content, intent },
-                { withCredentials: true }
+            const { data } = await axios.post(BACKEND_URL + "/api/posts",{ content, intent }, { withCredentials: true }
             );
             if (!data.success || !data.post) {
                 toast.error("Failed to post");
