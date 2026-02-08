@@ -10,7 +10,7 @@ export const createPost = async (req, res, next) => {
             });
         }
         const post = await Post.create({author: req.user.id, content, intent});
-        const populatedPost = await post.populate("author", "username avatar");
+        const populatedPost = await post.populate("author", "username name surname avatar");
         res.status(201).json({
             success: true,
             post: populatedPost
@@ -25,7 +25,7 @@ export const createPost = async (req, res, next) => {
 
 export const getPosts = async (req, res) => {
   try {
-    const posts = await Post.find().sort({ createdAt: -1 }).populate("author", "username avatar");
+    const posts = await Post.find().sort({ createdAt: -1 }).populate("author", "username name surname avatar");
     res.status(200).json(posts);
   } catch (error) {
     res.status(500).json({
