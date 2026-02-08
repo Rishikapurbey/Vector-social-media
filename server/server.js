@@ -6,6 +6,7 @@ import connectDB from "./src/config/mongodb.js";
 import authRouter from "./src/routes/auth.routes.js";
 import postRouter from "./src/routes/post.routes.js";
 import userRoutes from "./src/routes/user.routes.js";
+import passport from "./src/config/passport.js";
 
 const app = express();
 
@@ -15,6 +16,8 @@ app.use(cors({
   origin: "http://localhost:3000",
   credentials: true,
 }));
+
+app.use(passport.initialize());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

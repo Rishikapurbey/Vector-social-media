@@ -12,10 +12,7 @@ const userSchema = new mongoose.Schema(
 
     surname: {
       type: String,
-      required: true,
-      trim: true,
-      minlength: 2,
-      maxlength: 100,
+      default: "",
     },
 
     username: {
@@ -47,9 +44,23 @@ const userSchema = new mongoose.Schema(
 
     password: {
       type: String,
-      required: true,
+      required: function () {
+        return !this.googleId;
+      },
       minlength: 6,
       select: false,
+    },
+
+    googleId: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
+
+    provider: {
+      type: String,
+      enum: ["local", "google"],
+      default: "local",
     },
 
     description: {
