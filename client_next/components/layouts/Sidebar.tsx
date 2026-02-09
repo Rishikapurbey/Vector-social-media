@@ -77,11 +77,9 @@ export default function Sidebar(): JSX.Element {
 
                 <SidebarItem icon={<Home className="h-5 md:h-7" />} label="Home" href="/main" active={pathname === "/main"} />
                 <SidebarItem icon={<Search className="h-5 md:h-7" />} label="Explore" href="/main/explore" active={pathname === "/main/explore"} />
-
                 <SidebarItem icon={<Plus className="h-5 md:h-7" />} label="Create" onClick={() => setCreateOpen(true)} />
-
                 <SidebarItem icon={<Bell className="h-5 md:h-7" />} label="Activity" href="/main/activity" active={pathname === "/main/activity"} />
-                <SidebarItem icon={<User className="h-5 md:h-7" />} label="Profile" href="/main/profile" active={pathname === "/main/profile"} />
+                <SidebarItem icon={<User className="h-5 md:h-7" />} label="Profile" href={`/main/user/${userData?.username}`} active={pathname === `/main/user/${userData?.username}`} />
                 <SidebarItem icon={<Settings className="h-5 md:h-7" />} label="Settings" href="/main/settings" active={pathname === "/main/settings"} />
 
                 <p className="flex mr-auto pl-2 md:pl-7 gap-2 mt-auto transition-all duration-300 hover:bg-gray-200 dark:hover:bg-white/10 w-full h-10 rounded-lg items-center cursor-pointer dark:hover:text-white/70"

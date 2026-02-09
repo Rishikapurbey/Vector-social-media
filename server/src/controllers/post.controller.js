@@ -84,3 +84,19 @@ export const toggleLike = async (req, res) => {
         liked: index === -1,
     });
 };
+
+export const getPostsByUser = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const posts = await Post.find({ author: userId }).populate("author", "username name avatar").sort({ createdAt: -1 });
+        return res.status(200).json({
+            success: true,
+            posts,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Failed to fetch user posts",
+        });
+    }
+};

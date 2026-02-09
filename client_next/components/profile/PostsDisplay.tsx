@@ -1,26 +1,48 @@
-"use client"
+"use client";
 
-import { useAppContext } from "@/context/AppContext";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import PostCard from "../feed/Postcard";
 
-export default function PostsDislpay() {
+type PostsDisplayProps = {
+    userId: string;
+    emptyText?: string;
+};
 
-    const { userData, posts } = useAppContext();
-    const userPosts = posts.filter((post) => post.author._id === userData?.id);
-    
-    return(
-        <div>
-            <div className="flex flex-col gap-6">
-                {userPosts.length === 0 ? (
-                    <p className="text-gray-500 text-center mt-3">
-                        You haven't posted anything yet.
-                    </p>
-                ) : (
-                    userPosts.map((post) => (
-                        <PostCard key={post._id} post={post} />
-                    ))
-                )}
-            </div>
+export default function PostsDisplay({ userId, emptyText }: PostsDisplayProps) {
+    const [posts, setPosts] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const { data } = await axios.get(`${BACKEND_URL}/api/posts/user/${userId}`, { withCredentials: true });
+                setPosts(data.posts);
+            } catch {
+                setPosts([]);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchPosts();
+    }, [userId]);
+    if (loading) {
+        return <p className="text-center text-blue-500/70">Loading posts...</p>;
+    }
+    if (posts.length === 0) {
+        return (
+            <p className="text-gray-500 text-center mt-3">
+                {emptyText ?? "No posts yet!"}
+            </p>
+        );
+    }
+
+    return (
+        <div className="flex flex-col gap-6">
+            {posts.map((post) => (
+                <PostCard key={post._id} post={post} />
+            ))}
         </div>
     );
 }

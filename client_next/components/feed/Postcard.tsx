@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import PostDelete from "../modals/PostDelete";
 import ReportPost from "../modals/ReportPost";
+import { useRouter } from "next/navigation";
 
 type PostCardProps = {
     post: any;
@@ -22,6 +23,7 @@ const intentIconMap: Record<string, any> = {
 
 export default function PostCard({ post }: PostCardProps) {
 
+    const router = useRouter();
     const { userData, posts, setPosts } = useAppContext();
     const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -52,6 +54,10 @@ export default function PostCard({ post }: PostCardProps) {
             month: "2-digit",
             year: "2-digit",
         });
+    }
+
+    const openUserProfile = () => {
+        router.push(`/main/user/${post.author.username}`)
     }
 
     const handleLike = async () => {
@@ -103,11 +109,11 @@ export default function PostCard({ post }: PostCardProps) {
 
             <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-2">
-                    <div className="h-8 md:h-10 w-8 md:w-10 rounded-full">
+                    <div className="h-8 md:h-10 w-8 md:w-10 rounded-full transition-all duration-200 hover:outline-1 outline-blue-500" onClick={openUserProfile}>
                         <img src={post.author.avatar || "/default-avatar.png"} className="h-full w-full rounded-full object-cover" />
                     </div>
-                    <span className="font-semibold ml-1">{post.author.name}</span>
-                    <span className="text-[0.9rem] text-gray-500 hidden md:flex">
+                    <span className="font-semibold ml-1 transition-all duration-200 hover:text-blue-600" onClick={openUserProfile}>{post.author.name}</span>
+                    <span className="text-[0.9rem] text-gray-500 hidden md:flex transition-all duration-200 hover:text-gray-700" onClick={openUserProfile}>
                         @{post.author.username}
                     </span>
                     <p className="absolute left-195 text-[0.9rem] font-semibold text-blue-500 flex items-center gap-1.5">
