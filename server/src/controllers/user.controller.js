@@ -125,11 +125,10 @@ export const toggleFollowUser = async (req, res) => {
                 followed: true
             });
         }
-    } catch (err) {
-        console.error(err);
+    } catch (error) {
         res.status(500).json({
             success: false,
-            message: "Server error"
+            message: error.message
         });
     }
 };
