@@ -28,7 +28,7 @@ export default function FollowButton({ userId, isFollowing, onFollowChange }: Fo
     };
 
     return (
-        <button disabled={loading} onClick={toggleFollow} className={`w-30 h-9 rounded-md cursor-pointer transition-all duration-200 font-medium ${following ? "border text-gray-700 hover:bg-black/5 dark:hover:bg-white/2" : "bg-blue-500 hover:bg-blue-600 text-white"}`}>
+        <button disabled={loading} onClick={toggleFollow} className={`w-25 md:w-30 h-9 rounded-md cursor-pointer transition-all duration-200 font-medium ${following ? "border text-gray-700 hover:bg-black/5 dark:hover:bg-white/2" : "bg-blue-500 hover:bg-blue-600 text-white"}`}>
             {following ? "Following" : "Follow"}
         </button>
     );

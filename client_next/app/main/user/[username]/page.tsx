@@ -35,7 +35,6 @@ export default function UserProfilePage() {
   return (
     <ProfileLayout
       user={user}
-      isSelf={false}
       isFollowing={isFollowing}
     />
   );

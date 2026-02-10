@@ -32,6 +32,7 @@ export default function PostCard({ post }: PostCardProps) {
     const isLiked = post.likes.includes(userData?.id);
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement | null>(null);
+    const [likeAnimating, setLikeAnimating] = useState(false);
 
     function timeAgo(dateString: string) {
         const now = new Date().getTime();
@@ -62,8 +63,12 @@ export default function PostCard({ post }: PostCardProps) {
 
     const handleLike = async () => {
         try {
-            setPosts(prev => prev.map(p => p._id === post._id ? {...p, likes: isLiked ? p.likes.filter((id: string | undefined) => id !== userData?.id) : [...p.likes, userData?.id],} : p));
-            await axios.put(`${BACKEND_URL}/api/posts/${post._id}/like`,{}, { withCredentials: true });
+            if (!isLiked) {
+                setLikeAnimating(true);
+                setTimeout(() => setLikeAnimating(false), 300);
+            }
+            setPosts(prev => prev.map(p => p._id === post._id ? { ...p, likes: isLiked ? p.likes.filter((id: string | undefined) => id !== userData?.id) : [...p.likes, userData?.id], } : p));
+            await axios.put(`${BACKEND_URL}/api/posts/${post._id}/like`, {}, { withCredentials: true });
         } catch {
             toast.error("Failed to like post");
         }
@@ -109,7 +114,7 @@ export default function PostCard({ post }: PostCardProps) {
 
             <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-2">
-                    <div className="h-8 md:h-10 w-8 md:w-10 rounded-full transition-all duration-200 hover:outline-1 outline-blue-500" onClick={openUserProfile}>
+                    <div className="h-8 md:h-10 w-8 md:w-10 rounded-full transition-all duration-200" onClick={openUserProfile}>
                         <img src={post.author.avatar || "/default-avatar.png"} className="h-full w-full rounded-full object-cover" />
                     </div>
                     <span className="font-semibold ml-1 transition-all duration-200 hover:text-blue-600" onClick={openUserProfile}>{post.author.name}</span>
@@ -127,13 +132,7 @@ export default function PostCard({ post }: PostCardProps) {
                 </div>
 
                 <div ref={menuRef} className="relative">
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setMenuOpen(prev => !prev);
-                        }}
-                        className="p-1 rounded-full hover:bg-black/5 dark:hover:bg-white/10"
-                    >
+                    <button onClick={(e) => { e.stopPropagation(); setMenuOpen(prev => !prev); }} className="p-1 rounded-full hover:bg-black/5 dark:hover:bg-white/10">
                         <MoreHorizontal size={20} className="text-gray-400 cursor-pointer mt-0.5" />
                     </button>
 
@@ -182,10 +181,9 @@ export default function PostCard({ post }: PostCardProps) {
                         <Repeat size={20} className="hover:text-blue-500" />0
                     </p>
                     <p className="flex gap-1 items-center" onClick={handleLike}>
-                        <Heart size={20} className={`cursor-pointer hover:text-blue-500 ${isLiked ? "text-blue-500" : ""}`} fill={isLiked ? "currentColor" : "none"} />
+                        <Heart size={20} className={`cursor-pointer transition-transform duration-300 hover:text-blue-500 ${isLiked ? "text-blue-500" : ""} ${likeAnimating ? "scale-135" : "scale-100"}`} fill={isLiked ? "currentColor" : "none"}/>
                         {post.likes.length}
                     </p>
-
                 </div>
                 <div>
                     <p className="text-[0.85rem]">{timeAgo(post.createdAt)}</p>

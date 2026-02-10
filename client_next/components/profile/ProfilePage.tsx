@@ -10,6 +10,6 @@ export default function ProfilePage() {
   if (!userData) return <p className="p-10">Not logged in</p>;
 
   return (
-    <ProfileLayout user={userData} isSelf={true}/>
+    <ProfileLayout user={userData}/>
   );
 }

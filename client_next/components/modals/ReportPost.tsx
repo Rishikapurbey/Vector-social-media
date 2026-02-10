@@ -19,11 +19,7 @@ const REPORT_REASONS = [
   "Other",
 ];
 
-export default function ReportPost({
-  open,
-  onClose,
-  onSubmit,
-}: ReportPostProps) {
+export default function ReportPost({ open, onClose, onSubmit}: ReportPostProps) {
   const [reason, setReason] = useState("");
   const [note, setNote] = useState("");
   const [visible, setVisible] = useState(false);
@@ -79,13 +75,13 @@ export default function ReportPost({
         <textarea placeholder="Additional details (optional)" value={note} onChange={(e) => setNote(e.target.value)} rows={3}
           className="w-full rounded-md border px-3 py-2 mb-4 resize-none"/>
 
-        <div className="flex justify-end gap-3">
-          <button onClick={closeModal} className="w-35 py-1.5 rounded-md border text-sm hover:bg-black/5 dark:hover:bg-white/10">
+        <div className="flex justify-end gap-3 w-full">
+          <button onClick={closeModal} className="w-1/2 py-1.5 rounded-md border text-sm hover:bg-black/5 dark:hover:bg-white/10">
             Cancel
           </button>
 
           <button disabled={!reason} onClick={handleSubmit}
-            className={`w-35 py-1.5 rounded-md cursor-pointer text-white ${reason ? "bg-blue-500 hover:bg-blue-600" : "bg-blue-300 cursor-not-allowed"}`}>
+            className={`w-1/2 py-1.5 rounded-md cursor-pointer text-white ${reason ? "bg-blue-500 hover:bg-blue-600" : "bg-blue-300 cursor-not-allowed"}`}>
             Submit report
           </button>
         </div>
