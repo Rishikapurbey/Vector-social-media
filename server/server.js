@@ -7,6 +7,7 @@ import authRouter from "./src/routes/auth.routes.js";
 import postRouter from "./src/routes/post.routes.js";
 import userRoutes from "./src/routes/user.routes.js";
 import passport from "./src/config/passport.js";
+import commentRoutes from "./src/routes/comment.routes.js";
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/posts", postRouter);
 app.use("/api/users", userRoutes);
+app.use("/api/comments", commentRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
