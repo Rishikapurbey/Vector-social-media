@@ -165,7 +165,7 @@ export const login = async (req, res) => {
                 message: "User not found!"
             })
         }
-        const matched = bcrypt.compare(password, user.password)
+        const matched = await bcrypt.compare(password, user.password)
         if (!matched) {
             return res.json({
                 success: false,
@@ -197,7 +197,7 @@ export const logout = async (req, res) => {
         res.clearCookie('token', {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             path: "/",
         })
         return res.status(200).json({

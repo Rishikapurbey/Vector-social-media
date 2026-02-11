@@ -10,13 +10,10 @@ import { toast } from "react-toastify";
 export default function ProfileForm() {
     const fileRef = useRef<HTMLInputElement | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
-
     const [username, setUsername] = useState("");
     const [bio, setBio] = useState("");
     const [description, setDescription] = useState("");
-
     const [loading, setLoading] = useState(false);
-
     const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
