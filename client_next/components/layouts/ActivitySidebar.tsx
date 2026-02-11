@@ -67,7 +67,7 @@ export default function ActivitySidebar() {
           Suggestions
         </p>
         
-        <div className="mt-5 flex flex-col gap-6 overflow-y-auto pr-1">
+        <div className="mt-5 flex flex-col gap-6 max-h-[60vh] hide-scrollbar overflow-y-auto pr-1">
           {loading ? (
             <p className="text-sm opacity-50">Loading users...</p>
           ) : filteredUsers.length === 0 ? (

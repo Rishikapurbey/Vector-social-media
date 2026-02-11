@@ -23,10 +23,14 @@ export default function RegistrationForm() {
 
     const [loading, setLoading] = useState(false);
 
-    const {isLoggedIn} = useAppContext();
+    const {isLoggedIn, isProfileComplete} = useAppContext();
+
     useEffect(() => {
-        if (isLoggedIn) {
+        if (isLoggedIn && isProfileComplete) {
             router.replace("/main");
+        }
+        if(isLoggedIn && !isProfileComplete) {
+            router.replace("/auth/profile");
         }
     }, [isLoggedIn]);
 
