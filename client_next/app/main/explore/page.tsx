@@ -4,81 +4,198 @@ import ExploreSidebar from "@/components/layouts/ExploreSidebar";
 import axios from "axios";
 import { ExternalLink, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+type User = {
+  _id: string;
+  name: string;
+  username?: string;
+  avatar?: string;
+};
 
 export default function Explore() {
+  const [topPosts, setTopPosts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-    const [topPosts, setTopPosts] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
-    const router = useRouter();
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<User[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [open, setOpen] = useState(false);
 
-    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
+  const router = useRouter();
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        const fetchTopPosts = async () => {
-            try {
-                const { data } = await axios.get(`${BACKEND_URL}/api/posts/top-week`);
-                setTopPosts(data);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchTopPosts();
-    }, []);
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-    return (
-        <div className="flex">
-            <div className="w-full py-5 px-7">
-                <p className="text-[1.6rem] font-semibold text-center md:text-left">Explore</p>
-                <p className="opacity-45 text-center md:text-left">Discover people, posts and ideas</p>
-                <div className="flex items-center px-2 gap-2 mt-5 border bg-black/5 rounded-full h-10">
-                    <Search className="h-5" />
-                    <input type="text" placeholder="Search" className="outline-0 w-full h-full" />
-                </div>
-                <div className="mt-5">
-                    <p className="font-semibold">Trending domains</p>
-                    <div className="flex justify-between my-5">
-                        <div className="box h-35 w-[48%] border rounded-md overflow-clip relative cursor-pointer transition-all duration-300 hover:shadow-md">
-                            <p className="absolute z-20 bottom-0 left-0 p-2 w-full flex items-center gap-2 bg-black/30 text-white"><ExternalLink className="text-blue-500" />Science and technology</p>
-                            <img src="/science.webp" alt="" className="h-full w-full object-cover object-bottom" />
-                        </div>
-                        <div className="box h-35 w-[48%] border rounded-md overflow-clip relative cursor-pointer transition-all duration-300 hover:shadow-md">
-                            <p className="absolute z-20 bottom-0 left-0 p-2 w-full flex items-center gap-2 bg-black/30 text-white"><ExternalLink className="text-blue-500" />Sports</p>
-                            <img src="/kohli2.jpg" alt="" className="h-full w-full object-cover object-top" />
-                        </div>
+  // Fetch top posts
+  useEffect(() => {
+    const fetchTopPosts = async () => {
+      try {
+        const { data } = await axios.get(
+          `${BACKEND_URL}/api/posts/top-week`
+        );
+        setTopPosts(data);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTopPosts();
+  }, []);
+
+  // Debounced user search
+  useEffect(() => {
+    const delay = setTimeout(async () => {
+      if (!query.trim()) {
+        setResults([]);
+        setOpen(false);
+        return;
+      }
+
+      try {
+        setSearching(true);
+        const res = await axios.get(
+          `${BACKEND_URL}/api/users/search?query=${query}`,
+          { withCredentials: true }
+        );
+        setResults(res.data.users);
+        setOpen(true);
+      } catch (err) {
+        console.error("Search failed:", err);
+      } finally {
+        setSearching(false);
+      }
+    }, 400);
+
+    return () => clearTimeout(delay);
+  }, [query]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div className="flex">
+      <div className="w-full py-5 px-7">
+        <p className="text-[1.6rem] font-semibold text-center md:text-left">
+          Explore
+        </p>
+        <p className="opacity-45 text-center md:text-left">
+          Discover people, posts and ideas
+        </p>
+
+        <div className="relative mt-5" ref={wrapperRef}>
+          <div className="flex items-center px-2 gap-2 border bg-black/5 rounded-full h-10">
+            <Search className="h-5" />
+            <input type="text" placeholder="Search users" value={query} onChange={(e) => setQuery(e.target.value)} className="outline-0 w-full h-full bg-transparent"/>
+          </div>
+
+          {open && (
+            <div className="absolute w-full mt-2 bg-white dark:bg-black border rounded-xl shadow-lg max-h-75 overflow-y-auto z-50">
+              {searching ? (
+                <p className="p-4 text-sm opacity-50">
+                  Searching...
+                </p>
+              ) : results.length === 0 ? (
+                <p className="p-4 text-sm opacity-50">
+                  No users found.
+                </p>
+              ) : (
+                results.map((user) => (
+                  <div
+                    key={user._id}
+                    className="flex items-center gap-3 p-3 hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer transition"
+                    onClick={() => router.push( `/main/user/${user.username}`)}>
+                    <div className="h-10 w-10 rounded-full overflow-hidden bg-black/5 dark:bg-white/5">
+                      <img src={ user.avatar || "/default-avatar.png" } alt={user.name} className="h-full w-full object-cover"/>
                     </div>
-                </div>
-                <div className="mt-5">
-                    <p className="font-semibold">Top posts of the week</p>
-                    <div className="flex flex-col gap-5 md:flex-row items-center justify-between mt-5">
-                        {loading ? (
-                            <p className="text-gray-500">Loading top posts...</p>
-                        ) : topPosts.length === 0 ? (
-                            <p className="text-gray-500">No trending posts this week</p>
-                        ) : (
-                            topPosts.map((post) => (
-                                <div key={post._id} className="box w-[90%] md:w-[32%] border rounded-md px-5 py-4 relative cursor-pointer hover:bg-black/2">
-                                    <p className="text-blue-500">
-                                        {post.likes.length} likes
-                                    </p>
-                                    <p className="absolute top-4 right-4 text-[0.9rem] text-gray-600">
-                                        #{post.intent}
-                                    </p>
-                                    <p className="my-3 line-clamp-4">
-                                        {post.content}
-                                    </p>
-                                    <p className="text-[0.9rem] transition-all duration-200 hover:text-blue-500" onClick={() => router.push(`/main/user/${post.author.username}`)}>@{post.author.username}</p>
-                                    <p className="text-gray-500 text-[0.8rem]">
-                                        {new Date(post.createdAt).toLocaleDateString("en-GB")}
-                                    </p>
-                                </div>
-                            ))
-                        )}
-                    </div>
 
-                </div>
+                    <div>
+                      <p className="text-sm font-medium">
+                        {user.name}
+                      </p>
+                      <p className="text-xs opacity-50">
+                        @{user.username}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
-            <ExploreSidebar />
+          )}
         </div>
-    );
+
+        <div className="mt-5">
+          <p className="font-semibold">Trending domains</p>
+          <div className="flex justify-between my-5">
+            <div className="box h-35 w-[48%] border rounded-md overflow-clip relative cursor-pointer hover:shadow-md">
+              <p className="absolute z-20 bottom-0 left-0 p-2 w-full flex items-center gap-2 bg-black/30 text-white">
+                <ExternalLink className="text-blue-500" />
+                Science and technology
+              </p>
+              <img src="/science.webp" alt="" className="h-full w-full object-cover object-bottom"/>
+            </div>
+
+            <div className="box h-35 w-[48%] border rounded-md overflow-clip relative cursor-pointer hover:shadow-md">
+              <p className="absolute z-20 bottom-0 left-0 p-2 w-full flex items-center gap-2 bg-black/30 text-white">
+                <ExternalLink className="text-blue-500" />
+                Sports
+              </p>
+              <img src="/kohli2.jpg" alt="" className="h-full w-full object-cover object-top"/>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-5">
+          <p className="font-semibold">Top posts of the week</p>
+
+          <div className="flex flex-col gap-5 md:flex-row items-center justify-between mt-5">
+            {loading ? (
+              <p className="text-gray-500">
+                Loading top posts...
+              </p>
+            ) : topPosts.length === 0 ? (
+              <p className="text-gray-500">
+                No trending posts this week
+              </p>
+            ) : (
+              topPosts.map((post) => (
+                <div key={post._id} className="box w-[90%] md:w-[32%] border rounded-md px-5 py-4 relative cursor-pointer hover:bg-black/2">
+                  <p className="text-blue-500">
+                    {post.likes.length} likes
+                  </p>
+                  <p className="absolute top-4 right-4 text-[0.9rem] text-gray-600">
+                    #{post.intent}
+                  </p>
+                  <p className="my-3 line-clamp-4">
+                    {post.content}
+                  </p>
+                  <p className="text-[0.9rem] hover:text-blue-500" onClick={() => router.push( `/main/user/${post.author.username}`)}>
+                    @{post.author.username}
+                  </p>
+                  <p className="text-gray-500 text-[0.8rem]">
+                    {new Date(
+                      post.createdAt
+                    ).toLocaleDateString("en-GB")}
+                  </p>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+      <ExploreSidebar />
+    </div>
+  );
 }
