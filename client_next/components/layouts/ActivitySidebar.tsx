@@ -1,12 +1,12 @@
 "use client";
 
-import { Button } from "../ui/button";
 import { Search, UserPlus, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAppContext } from "@/context/AppContext";
+import FollowButton from "../ui/FollowButton";
 
-type User = {
+type SuggestedUser = {
   _id: string;
   name: string;
   bio?: string;
@@ -15,9 +15,8 @@ type User = {
 
 export default function ActivitySidebar() {
   const [open, setOpen] = useState(false);
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<SuggestedUser[]>([]);
   const [loading, setLoading] = useState(true);
-
   const { userData } = useAppContext();
 
   const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
@@ -25,7 +24,10 @@ export default function ActivitySidebar() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios.get(BACKEND_URL + "/api/users/all", {withCredentials: true});
+        const res = await axios.get(
+          `${BACKEND_URL}/api/users/all`,
+          { withCredentials: true }
+        );
         setUsers(res.data.users);
       } catch (err) {
         console.error("Failed to fetch users:", err);
@@ -35,9 +37,15 @@ export default function ActivitySidebar() {
     };
 
     fetchUsers();
-  }, []);
+  }, [BACKEND_URL]);
 
-  const filteredUsers = users.filter((user) => user._id !== userData?.id);
+  const filteredUsers = users.filter((suggestedUser) => {
+  if (suggestedUser._id === userData?.id) return false;
+  if (userData?.following?.includes(suggestedUser._id)) return false;
+
+  return true;
+});
+
 
   return (
     <>
@@ -57,6 +65,7 @@ export default function ActivitySidebar() {
         <p className="font-semibold ml-2 text-[1.1rem]">
           Search people you know
         </p>
+
         <div className="flex border h-10 rounded-full items-center px-3 bg-black/3 mt-7 mb-5">
           <Search className="h-5" />
           <input type="text" placeholder="Search" className="outline-0 w-full h-full px-3 bg-transparent"/>
@@ -66,33 +75,42 @@ export default function ActivitySidebar() {
           <UserPlus className="h-5 text-blue-500" />
           Suggestions
         </p>
-        
+
         <div className="mt-5 flex flex-col gap-6 max-h-[60vh] hide-scrollbar overflow-y-auto pr-1">
           {loading ? (
             <p className="text-sm opacity-50">Loading users...</p>
           ) : filteredUsers.length === 0 ? (
             <p className="text-sm opacity-50">No users found.</p>
           ) : (
-            filteredUsers.map((user) => (
-              <div key={user._id} className="flex items-center gap-2">
-                <div className="h-12 w-12 rounded-full bg-black/5 dark:bg-white/5 overflow-hidden">
-                  <img src={user.avatar || "/default-avatar.png"} alt={user.name} className="h-full w-full object-cover"/>
-                </div>
+            filteredUsers.map((suggestedUser) => {
+              const isFollowing =
+                userData?.following?.includes(
+                  suggestedUser._id.toString()
+                ) ?? false;
 
-                <div className="flex flex-col w-35">
-                  <p className="text-[0.9rem] truncate">
-                    {user.name}
-                  </p>
-                  <p className="opacity-50 text-[0.8rem] truncate">
-                    {user.bio || "No bio available"}
-                  </p>
-                </div>
+              return (
+                <div key={suggestedUser._id} className="flex items-center gap-2">
+                  <div className="h-12 w-12 rounded-full bg-black/5 dark:bg-white/5 overflow-hidden">
+                    <img src={suggestedUser.avatar || "/default-avatar.png"} alt={suggestedUser.name} className="h-full w-full object-cover"/>
+                  </div>
 
-                <Button className="h-8 cursor-pointer bg-blue-500 hover:bg-blue-600 text-white">
-                  Follow
-                </Button>
-              </div>
-            ))
+                  <div className="flex flex-col w-35">
+                    <p className="text-[0.9rem] truncate">
+                      {suggestedUser.name}
+                    </p>
+                    <p className="opacity-50 text-[0.8rem] truncate">
+                      {suggestedUser.bio ||
+                        "No bio available"}
+                    </p>
+                  </div>
+
+                  <FollowButton
+                    userId={suggestedUser._id}
+                    isFollowing={isFollowing}
+                  />
+                </div>
+              );
+            })
           )}
         </div>
 

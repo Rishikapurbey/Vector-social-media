@@ -23,6 +23,8 @@ export type User = {
   avatar?: string;
   isProfileComplete: boolean;
   signupStep?: number;
+  followers?: string[];
+  following?: string[];
 };
 
 export type Post = any;

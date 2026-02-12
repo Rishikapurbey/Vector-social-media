@@ -4,7 +4,7 @@ import { useState } from "react";
 type FollowButtonProps = {
     userId: string;
     isFollowing: boolean;
-    onFollowChange: (next: boolean) => void;
+    onFollowChange?: (next: boolean) => void;
 };
 
 export default function FollowButton({ userId, isFollowing, onFollowChange }: FollowButtonProps) {
@@ -19,7 +19,7 @@ export default function FollowButton({ userId, isFollowing, onFollowChange }: Fo
             const res = await axios.put(`${BACKEND_URL}/api/users/${userId}/follow`, {}, { withCredentials: true });
             const next = res.data.followed;
             setFollowing(next);
-            onFollowChange(next);
+            onFollowChange?.(next);
         } catch (err) {
             console.error(err);
         } finally {

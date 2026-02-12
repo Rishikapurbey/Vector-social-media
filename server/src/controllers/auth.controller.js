@@ -139,6 +139,8 @@ export const getMe = (req, res) => {
             avatar: user.avatar,
             isProfileComplete: user.isProfileComplete,
             signupStep: user.signupStep,
+            followers: user.followers.map(id => id.toString()),
+            following: user.following.map(id => id.toString()),
         },
     });
 };
