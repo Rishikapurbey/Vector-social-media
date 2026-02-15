@@ -34,7 +34,6 @@ export default function ActivitySidebar() {
   const { userData } = useAppContext();
   const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
-  // Fetch all users
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -53,14 +52,12 @@ export default function ActivitySidebar() {
     fetchUsers();
   }, [BACKEND_URL]);
 
-  // Search logic
   useEffect(() => {
     const delay = setTimeout(async () => {
       if (!query.trim()) {
         setResults([]);
         return;
       }
-
       try {
         setSearching(true);
         const res = await axios.get(
@@ -78,7 +75,6 @@ export default function ActivitySidebar() {
     return () => clearTimeout(delay);
   }, [query, BACKEND_URL]);
 
-  // Close sidebar on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -94,38 +90,28 @@ export default function ActivitySidebar() {
       document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Filter suggestions
   const filteredUsers = users.filter((suggestedUser) => {
-    if (suggestedUser._id === userData?.id) return false;
-    if (userData?.following?.includes(suggestedUser._id)) return false;
+    if (suggestedUser._id === userData?.id) {
+      return false;
+    }
+    if (userData?.following?.includes(suggestedUser._id)) {
+      return false;
+    }
     return true;
   });
 
   return (
     <>
-      <button
-        onClick={() => setOpen(true)}
-        className="fixed top-4 right-4 z-50 lg:hidden p-2 rounded-full bg-blue-500 text-white shadow-lg"
-      >
+      <button onClick={() => setOpen(true)} className="fixed top-4 right-4 z-50 lg:hidden p-2 rounded-full bg-blue-500 text-white shadow-lg">
         <UserPlus />
       </button>
 
       {open && (
-        <div
-          className="fixed inset-0 bg-black/40 z-40 lg:hidden"
-          onClick={() => setOpen(false)}
-        />
+        <div className="fixed inset-0 bg-black/40 z-40 lg:hidden" onClick={() => setOpen(false)}/>
       )}
 
-      <div
-        ref={wrapperRef}
-        className={`h-screen md:h-fit w-fit p-5 bg-white dark:bg-black fixed lg:static top-0 right-0 z-50 transform transition-transform duration-300 ${open ? "translate-x-0" : "translate-x-full"
-          } lg:translate-x-0`}
-      >
-        <button
-          onClick={() => setOpen(false)}
-          className="absolute top-4 right-4 lg:hidden"
-        >
+      <div ref={wrapperRef} className={`h-screen md:h-fit w-fit p-5 bg-white dark:bg-black fixed lg:static top-0 right-0 z-50 transform transition-transform duration-300 ${open ? "translate-x-0" : "translate-x-full"} lg:translate-x-0`}>
+        <button onClick={() => setOpen(false)} className="absolute top-4 right-4 lg:hidden">
           <X />
         </button>
 
@@ -135,13 +121,7 @@ export default function ActivitySidebar() {
 
         <div className="flex gap-2 border h-10 rounded-full items-center px-3 bg-black/3 mt-7 mb-5">
           <Search className="h-5" />
-          <input
-            type="text"
-            placeholder="Search users"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="outline-0 w-full h-full bg-transparent"
-          />
+          <input type="text" placeholder="Search users" value={query} onChange={(e) => setQuery(e.target.value)} className="outline-0 w-full h-full bg-transparent"/>
         </div>
 
         <p className="text-[1.1rem] font-semibold flex items-center gap-2">
@@ -158,30 +138,19 @@ export default function ActivitySidebar() {
             ) : results.length === 0 ? (
               <p className="text-sm opacity-50">No users found.</p>
             ) : (
-              results
-                .filter((user) => user._id !== userData?.id)
-                .map((user) => {
-
-                  const isFollowing =
-                    userData?.following?.includes(user._id.toString()) ?? false;
-
+              results.filter((user) => user._id !== userData?.id).map((user) => {
+                  const isFollowing = userData?.following?.includes(user._id.toString()) ?? false;
                   return (
                     <div key={user._id} className="flex items-center gap-2">
                       <div className="h-12 w-12 rounded-full overflow-hidden">
-                        <img
-                          src={user.avatar || "/default-avatar.png"}
-                          alt={user.name}
-                          className="h-full w-full object-cover"
-                        />
+                        <img src={user.avatar || "/default-avatar.png"} alt={user.name} className="h-full w-full object-cover"/>
                       </div>
-
                       <div className="flex flex-col w-30">
                         <p className="text-[0.9rem] truncate">{user.name}</p>
                         <p className="opacity-50 text-[0.8rem] truncate">
                           @{user.username}
                         </p>
                       </div>
-
                       <FollowButton
                         userId={user._id}
                         isFollowing={isFollowing}
@@ -194,19 +163,11 @@ export default function ActivitySidebar() {
             <p className="text-sm opacity-50">No users found.</p>
           ) : (
             filteredUsers.map((suggestedUser) => {
-              const isFollowing =
-                userData?.following?.includes(
-                  suggestedUser._id.toString()
-                ) ?? false;
-
+              const isFollowing = userData?.following?.includes( suggestedUser._id.toString() ) ?? false;
               return (
                 <div key={suggestedUser._id} className="flex items-center gap-2">
                   <div className="h-12 w-12 rounded-full overflow-hidden">
-                    <img
-                      src={suggestedUser.avatar || "/default-avatar.png"}
-                      alt={suggestedUser.name}
-                      className="h-full w-full object-cover"
-                    />
+                    <img src={suggestedUser.avatar || "/default-avatar.png"} alt={suggestedUser.name} className="h-full w-full object-cover"/>
                   </div>
 
                   <div className="flex flex-col w-30">
