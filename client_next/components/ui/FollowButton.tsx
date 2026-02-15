@@ -20,8 +20,8 @@ export default function FollowButton({ userId, isFollowing, onFollowChange }: Fo
             const next = res.data.followed;
             setFollowing(next);
             onFollowChange?.(next);
-        } catch (err) {
-            console.error(err);
+        } catch (err : any) {
+            console.error(err.message);
         } finally {
             setLoading(false);
         }

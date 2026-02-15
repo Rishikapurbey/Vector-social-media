@@ -40,7 +40,7 @@ export default function ProfileLayout({ user, isFollowing }: ProfileLayoutProps)
             </h1>
 
             {isSelfProfile ? (
-              <button onClick={() => router.push("/main/settings")} className="w-32 text-sm md:text-[1rem] py-1.5 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition flex items-center justify-center gap-1 mx-auto md:mx-0">
+              <button onClick={() => router.push("/main/settings")} className="w-32 text-sm md:text-[1rem] py-1.5 rounded-md cursor-pointer bg-blue-500 text-white hover:bg-blue-600 transition flex items-center justify-center gap-1 mx-auto md:mx-0">
                 <Edit className="h-4" />
                 Edit profile
               </button>

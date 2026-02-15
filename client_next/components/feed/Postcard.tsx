@@ -59,6 +59,10 @@ export default function PostCard({ post }: PostCardProps) {
         });
     }
 
+    const openPost = () => {
+        router.push(`/main/post/${post._id}`);
+    };
+
     const openUserProfile = () => {
         router.push(`/main/user/${post.author.username}`)
     }
@@ -107,7 +111,8 @@ export default function PostCard({ post }: PostCardProps) {
     }, [menuOpen]);
 
     return (
-        <div className="border overflow-clip relative border-black/10 dark:border-white/10 bg-white dark:bg-black cursor-pointer hover:bg-black/2 dark:hover:bg-white/1 px-5 py-3 rounded-2xl transition">
+        <div className="border overflow-clip relative border-black/10 dark:border-white/10 bg-white dark:bg-black cursor-pointer hover:bg-black/2 dark:hover:bg-white/1 px-5 py-3 rounded-2xl transition"
+        onClick={openPost}>
 
             <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-2">

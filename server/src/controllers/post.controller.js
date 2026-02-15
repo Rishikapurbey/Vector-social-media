@@ -1,4 +1,5 @@
 import Post from "../models/post.model.js";
+import Notification from "../models/notification.model.js";
 
 export const createPost = async (req, res, next) => {
     try {
@@ -78,6 +79,14 @@ export const toggleLike = async (req, res) => {
         post.likes.splice(index, 1);
     }
     await post.save();
+    if (post.author.toString() !== userId) {
+        await Notification.create({
+            recipient: post.author,
+            sender: userId,
+            type: "like",
+            post: post._id,
+        });
+    }
     res.json({
         success: true,
         likesCount: post.likes.length,
@@ -101,13 +110,29 @@ export const getPostsByUser = async (req, res) => {
     }
 };
 
-export const getTopPostsOfWeek = async (req, res) => {
+export const getSinglePost = async (req, res) => {
   try {
-    const weekAgo = new Date();
-    weekAgo.setDate(weekAgo.getDate() - 7);
-    const posts = await Post.find({createdAt: { $gte: weekAgo }}).populate("author", "username avatar").sort({ likes: -1 }).limit(3);
-    res.json(posts);
+    const post = await Post.findById(req.params.postId)
+      .populate("author", "username name avatar");
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    res.json(post);
   } catch (err) {
-    res.status(500).json({ message: "Failed to fetch top posts" });
+    res.status(500).json({ message: "Server error" });
   }
+};
+
+
+export const getTopPostsOfWeek = async (req, res) => {
+    try {
+        const weekAgo = new Date();
+        weekAgo.setDate(weekAgo.getDate() - 7);
+        const posts = await Post.find({ createdAt: { $gte: weekAgo } }).populate("author", "username avatar").sort({ likes: -1 }).limit(3);
+        res.json(posts);
+    } catch (err) {
+        res.status(500).json({ message: "Failed to fetch top posts" });
+    }
 };

@@ -1,5 +1,6 @@
 import Comment from "../models/comment.model.js";
 import Post from "../models/post.model.js";
+import Notification from '../models/notification.model.js'
 
 export const addComment = async (req, res) => {
     const { postId } = req.params;
@@ -9,10 +10,28 @@ export const addComment = async (req, res) => {
             message: "Comment cannot be empty"
         });
     }
-    const comment = await Comment.create({ post: postId, author: req.user.id, content });
-    await Post.findByIdAndUpdate(postId, { $inc: { commentsCount: 1 }, });
+    const post = await Post.findById(postId);
+    if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+    }
+    const comment = await Comment.create({
+        post: postId,
+        author: req.user.id,
+        content
+    });
+    await Post.findByIdAndUpdate(postId, {
+        $inc: { commentsCount: 1 },
+    });
     const populated = await comment.populate("author", "username name avatar");
-    res.status(201).json(populated);
+    if (post.author.toString() !== req.user.id) {
+        await Notification.create({
+            recipient: post.author,
+            sender: req.user.id,
+            type: "comment",
+            post: post._id,
+        });
+    }
+    return res.status(201).json(populated);
 };
 
 export const getPostComments = async (req, res) => {

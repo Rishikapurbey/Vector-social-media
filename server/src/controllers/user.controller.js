@@ -1,5 +1,6 @@
 import cloudinary from "../config/cloudinary.js";
 import User from "../models/user.model.js";
+import Notification from "../models/notification.model.js";
 
 export const uploadAvatar = async (req, res) => {
     try {
@@ -126,6 +127,11 @@ export const toggleFollowUser = async (req, res) => {
         } else {
             await User.findByIdAndUpdate(currentUserId, { $addToSet: { following: targetUserId }, $inc: { followingCount: 1 } });
             await User.findByIdAndUpdate(targetUserId, { $addToSet: { followers: currentUserId }, $inc: { followersCount: 1 }, });
+            await Notification.create({
+                recipient: targetUser._id,
+                sender: req.user._id,
+                type: "follow",
+            });
             return res.json({
                 followed: true
             });
