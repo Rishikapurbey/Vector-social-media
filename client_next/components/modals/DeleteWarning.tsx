@@ -40,7 +40,7 @@ export default function ConfirmModal({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`w-[90%] max-w-md rounded-xl bg-white dark:bg-black p-5 shadow-lg transform transition-all duration-200 ${
+        className={`w-[90%] max-w-md rounded-xl bg-white p-5 shadow-lg transform transition-all duration-200 ${
           open
             ? "scale-100 translate-y-0 opacity-100"
             : "scale-95 translate-y-2 opacity-0"
@@ -58,7 +58,7 @@ export default function ConfirmModal({
         </p>
 
         {content && (
-          <div className="border rounded-md p-3 text-sm max-h-30 overflow-y-auto bg-gray-50 dark:bg-white/5 my-5">
+          <div className="border rounded-md p-3 text-sm max-h-30 overflow-y-auto bg-gray-50 my-5">
             {content}
           </div>
         )}
@@ -66,7 +66,7 @@ export default function ConfirmModal({
         <div className="flex justify-end gap-3 w-full">
           <button
             onClick={onClose}
-            className="w-[50%] py-1.5 rounded-md border cursor-pointer hover:bg-black/5 dark:hover:bg-white/10"
+            className="w-[50%] py-1.5 rounded-md border cursor-pointer hover:bg-black/5"
           >
             Cancel
           </button>

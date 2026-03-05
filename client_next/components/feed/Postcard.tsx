@@ -156,7 +156,7 @@ export default function PostCard({ post, setPost }: PostCardProps) {
                     </button>
 
                     {menuOpen && (
-                        <div className="absolute overflow-clip top-0 right-0 w-30 bg-white dark:bg-black border border-black/10 dark:border-white/20 rounded-md shadow-lg z-50">
+                        <div className="absolute overflow-clip top-0 right-0 w-30 bg-white border border-black/10 rounded-md shadow-lg z-50">
                             <button className="w-full cursor-pointer flex items-center gap-2 px-3 py-2 text-sm text-blue-500 transition-all duration-300 hover:bg-black/3 dark:hover:bg-white/5" onClick={() => setMenuOpen(false)}>
                                 <Share2 size={14} />
                                 Share post
