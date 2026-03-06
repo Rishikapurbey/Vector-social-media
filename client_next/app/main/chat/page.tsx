@@ -43,7 +43,7 @@ export default function ChatListPage() {
                         <div
                             key={convo._id}
                             onClick={() => router.push(`/main/chat/${convo._id}`)}
-                            className="flex items-center gap-3 p-4 rounded-md cursor-pointer bg-black/10 hover:bg-transparent hover:shadow-lg text-white transition-all duration-200"
+                            className="flex items-center gap-3 p-4 rounded-md cursor-pointer bg-black/10 hover:bg-black/15 hover:shadow-lg text-white transition-all duration-200"
                         >
 
                             <img
