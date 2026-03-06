@@ -63,8 +63,8 @@ export default function CommentsSection({ postId }: { postId: string }) {
             await axios.delete(`${BACKEND_URL}/api/comments/${selectedComment._id}`, { withCredentials: true });
             setComments(prev => prev.filter(c => c._id !== selectedComment._id));
             toast.success("Comment deleted");
-        } catch {
-            toast.error("Failed to delete comment");
+        } catch (error : any) {
+            toast.error(error.message);
         } finally {
             setShowDeleteModal(false);
             setSelectedComment(null);
