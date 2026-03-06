@@ -76,7 +76,7 @@ export default function CommentsSection({ postId }: { postId: string }) {
     }
 
     return (
-        <div className="mt-3 border-t pt-3 px-5 backdrop-blur-3xl rounded-b-xl">
+        <div className="mt-3 border-t pt-3 px-3 md:px-5 backdrop-blur-3xl rounded-b-xl">
             {userData && (
                 <div className="flex gap-2 my-4">
                     <input value={text} onChange={(e) => setText(e.target.value)} placeholder="Write a comment..." className="flex-1 bg-white/30 rounded-md px-3 h-9 md:h-10 outline-none" />
@@ -98,7 +98,7 @@ export default function CommentsSection({ postId }: { postId: string }) {
                         String(c.author?._id) === String(userData?.id);
 
                     return (
-                        <div key={c._id} className="flex gap-2 p-3 rounded-lg">
+                        <div key={c._id} className="flex gap-2 py-3 px-2 rounded-lg">
                             <img src={c.author?.avatar || "/default-avatar.png"} className="h-7 md:h-9 w-7 md:w-9 object-cover rounded-full" />
                             <div className="flex items-center gap-3 w-full">
                                 <div className="flex w-full md:w-fit items-center">

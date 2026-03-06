@@ -129,7 +129,7 @@ export default function PostCard({ post, setPost }: PostCardProps) {
     }, [menuOpen]);
 
     return (
-        <div className="border overflow-clip relative border-black/10 dark:border-white/10 bg-black/5 backdrop-blur-3xl cursor-pointer hover:shadow-lg px-5 py-3 rounded-2xl transition"
+        <div className="border overflow-clip relative border-black/10 bg-black/10 backdrop-blur-3xl cursor-pointer hover:shadow-lg px-5 py-3 rounded-2xl transition"
         onClick={openPost}>
             <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-2">
