@@ -18,7 +18,6 @@ export default function ProfileSettings() {
   const { userData, setUserData } = useAppContext();
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-
   const [loading, setLoading] = useState(false);
   const [initialData, setInitialData] = useState<any>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -75,20 +74,12 @@ export default function ProfileSettings() {
 
     try {
       setUploadingAvatar(true);
-
-      const res = await axios.post(
-        BACKEND_URL + "/api/users/avatar",
-        data,
-        { withCredentials: true }
-      );
-
+      const res = await axios.post(BACKEND_URL + "/api/users/avatar", data, { withCredentials: true });
       if (res.data.success) {
         setAvatar(res.data.avatar);
         setUserData(prev => prev ? { ...prev, avatar: res.data.avatar } : prev);
-
         setSelectedFile(null);
         setPreview(null);
-
         toast.success("Profile picture updated");
       }
     } catch {
@@ -132,9 +123,18 @@ export default function ProfileSettings() {
     }
   };
 
+  const handleAvatarDiscard = () => {
+    setSelectedFile(null);
+    setPreview(null);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   const handleCancel = () => {
     setFormData(initialData);
-
+    handleAvatarDiscard();
     setEditable({
       username: false,
       name: false,
@@ -154,13 +154,36 @@ export default function ProfileSettings() {
           <img src={preview || avatar || "/avatar-placeholder.png"} className="h-full w-full object-cover" />
         </div>
 
-        <button type="button" onClick={() => fileInputRef.current?.click()} className="text-blue-600 font-medium cursor-pointer">
-          Change photo
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="text-blue-600 font-medium cursor-pointer"
+          >
+            Change photo
+          </button>
 
-        <button type="button" disabled={!selectedFile || uploadingAvatar} onClick={handleAvatarUpload} className={`px-4 py-1.5 rounded-md text-white transition ${!selectedFile || uploadingAvatar ? "hidden" : "bg-blue-500 hover:bg-blue-600 cursor-pointer"}`}>
-          {uploadingAvatar ? "Uploading..." : "Set as profile pic"}
-        </button>
+          {selectedFile && (
+            <>
+              <button
+                type="button"
+                disabled={uploadingAvatar}
+                onClick={handleAvatarUpload}
+                className="h-9 px-5 text-sm rounded-md bg-blue-500 hover:bg-blue-600 text-white cursor-pointer"
+              >
+                {uploadingAvatar ? "Uploading..." : "Set as profile pic"}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleAvatarDiscard}
+                className="h-9 px-5 rounded-md bg-white text-sm cursor-pointer"
+              >
+                Discard
+              </button>
+            </>
+          )}
+        </div>
 
         <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
       </div>
@@ -222,7 +245,7 @@ export default function ProfileSettings() {
       </div>
 
       <div className="flex justify-end gap-4 mt-7">
-        <button className="w-40 py-2 bg-blue-600 text-white cursor-pointer rounded-lg"onClick={handleCancel}>Cancel</button>
+        <button className="w-40 py-2 bg-blue-600 text-white cursor-pointer rounded-lg" onClick={handleCancel}>Cancel</button>
         <button disabled={loading || !isFormChanged} onClick={handleSave} className={`w-40 py-2 text-white rounded-lg ${isFormChanged ? 'bg-blue-600 cursor-pointer' : 'cursor-not-allowed bg-blue-400'} ${loading ? 'cursor-not-allowed bg-blue-400' : ''}`}>
           {loading ? 'Saving..' : 'Save changes'}
         </button>
