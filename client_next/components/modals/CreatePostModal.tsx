@@ -12,7 +12,7 @@ type CreateModalProps = {
     onPostCreated: (post: any) => void;
 };
 
-export default function CreateModal({onClose,onPostCreated}: CreateModalProps) {
+export default function CreatePostModal({onClose,onPostCreated}: CreateModalProps) {
     const [visible, setVisible] = useState(false);
     const [intent, setIntent] = useState("");
     const [content, setContent] = useState("");

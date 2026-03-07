@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import PostList from "./PostList";
 import { useAppContext } from "@/context/AppContext";
+import CreatePostPopup from "./CreatePostPopup";
 
 export default function Feed() {
     const { posts, setPosts } = useAppContext();
@@ -20,6 +21,7 @@ export default function Feed() {
     return (
         <div className="hide-scrollbar w-full px-5 md:px-10 pb-10">
             <PostList posts={posts} />
+            <CreatePostPopup />
         </div>
     );
 }

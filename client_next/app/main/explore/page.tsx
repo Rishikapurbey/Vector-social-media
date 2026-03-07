@@ -137,7 +137,7 @@ export default function Explore() {
         <div className="mt-5">
           <p className="font-semibold text-white">Trending domains</p>
           <div className="flex justify-between my-5">
-            <div className="box h-35 w-[48%] border rounded-md overflow-clip relative cursor-pointer hover:shadow-md">
+            <div className="box h-35 w-[48%] rounded-md overflow-clip relative cursor-pointer hover:shadow-md">
               <p className="absolute z-20 bottom-0 left-0 p-2 w-full flex items-center gap-2 bg-black/30 text-white">
                 <ExternalLink className="text-blue-500" />
                 Science and technology
@@ -145,7 +145,7 @@ export default function Explore() {
               <img src="/science.webp" alt="" className="h-full w-full object-cover object-bottom"/>
             </div>
 
-            <div className="box h-35 w-[48%] border rounded-md overflow-clip relative cursor-pointer hover:shadow-md">
+            <div className="box h-35 w-[48%] rounded-md overflow-clip relative cursor-pointer hover:shadow-md">
               <p className="absolute z-20 bottom-0 left-0 p-2 w-full flex items-center gap-2 bg-black/30 text-white">
                 <ExternalLink className="text-blue-500" />
                 Sports

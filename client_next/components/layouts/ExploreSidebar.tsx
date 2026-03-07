@@ -22,7 +22,7 @@ export default function ExploreSidebar() {
                     <X />
                 </button>
 
-                <div className="p-2 pb-5 border-b">
+                <div className="p-2 pb-3 mb-3 border-b">
                 <p className="flex items-center gap-1 font-semibold"> <Compass className="h-5 text-blue-500"/> Explore topics</p>
                 <div className="flex justify-between mt-5">
                     <div className="box h-20 border w-[47%] rounded-md flex items-center justify-center gap-1 bg-black/5 dark:bg-white/5 transition-all duration-300 dark:hover:scale-102 dark:hover:border-white cursor-pointer hover:shadow-md">
@@ -43,7 +43,7 @@ export default function ExploreSidebar() {
                 <div>
                     <p className="flex items-center gap-2 font-semibold"> <TrendingUp className="h-5 text-blue-500"/> Trending topics</p>
                     <div className="box mt-5 flex">
-                        <div className="h-12 w-12 bg-black/5 rounded-md mr-4 overflow-clip"><img src="/ai.webp" alt="" /></div>
+                        <div className="h-12 w-12 bg-black/5 rounded-md mr-4 overflow-clip"><img src="/cse.jpg" alt="" className="h-full w-full object-cover"/></div>
                         <div className="w-40 text-[0.95rem]">Artificial Intelligence and Machine Learning</div>
                         <p className="flex items-center gap-0.5 text-[0.8rem] ml-1"> <Heart className="text-blue-400 h-full mt-auto" fill="currentColor"/> 120</p>
                     </div>
@@ -53,12 +53,12 @@ export default function ExploreSidebar() {
                         <p className="flex items-center gap-0.5 text-[0.8rem] ml-1"> <Heart className="text-blue-400 h-full mt-auto" fill="currentColor"/> 356</p>
                     </div>
                     <div className="box my-5 flex">
-                        <div className="h-12 w-12 bg-black/5 rounded-md mr-4 overflow-clip"><img src="/computer.jpg" alt="" className="h-full w-full object-cover"/></div>
+                        <div className="h-12 w-12 bg-black/5 rounded-md mr-4 overflow-clip"><img src="/tech.png" alt="" className="h-full w-full object-cover object-right  "/></div>
                         <div className="w-40 text-[0.95rem]">Rising prices of RAM over the world</div>
                         <p className="flex items-center gap-0.5 text-[0.8rem] ml-1"> <Heart className="text-blue-400 h-full mt-auto" fill="currentColor"/> 142</p>
                     </div>
                     <div className="box mt-5 flex">
-                        <div className="h-12 w-12 bg-black/5 rounded-md mr-4 overflow-clip"><img src="/kohli.jpg" alt="" className="h-full w-full object-cover"/></div>
+                        <div className="h-12 w-12 bg-black/5 rounded-md mr-4 overflow-clip"><img src="/kohli2.jpg" alt="" className="h-full w-full object-cover"/></div>
                         <div className="w-40 text-[0.95rem]">Virat Kohli back at number 1 spot in ODIs</div>
                         <p className="flex items-center gap-0.5 text-[0.8rem] ml-1"> <Heart className="text-blue-400 h-full mt-auto" fill="currentColor"/> 180</p>
                     </div>

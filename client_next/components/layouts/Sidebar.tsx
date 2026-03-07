@@ -4,7 +4,7 @@ import { useState, useEffect, ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Home, Search, Bell, User, Plus, Menu, X, Settings, LogOut, Send } from "lucide-react";
-import CreateModal from "../modals/CreateModal";
+import CreateModal from "../modals/CreatePostModal";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useAppContext } from "@/context/AppContext";
