@@ -20,13 +20,9 @@ export default function ProfileLayout({ user, isFollowing }: ProfileLayoutProps)
 
   const router = useRouter();
   const { userData } = useAppContext();
-
   const isSelfProfile = userData?.id === user._id;
-
   const [followersCount, setFollowersCount] = useState(user.followers?.length || 0);
   const [followingCount] = useState(user.following?.length || 0);
-
-  // unknown initially to avoid wrong UI flash
   const [following, setFollowing] = useState<boolean | null>(null);
 
   useEffect(() => {

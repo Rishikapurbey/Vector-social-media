@@ -69,12 +69,13 @@ export default function Sidebar() {
       )}
 
       <aside className={`fixed md:static top-0 left-0 z-50 h-screen text-white w-50 md:w-55 border-r border-black/5 shadow-lg flex flex-col gap-5 px-1 py-8 font-serif text-[1.1rem] backdrop-blur-3xl transform transition-transform duration-300 ${open ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}>
-        <div className="flex w-full ml-5">
-          <div className="flex flex-col justify-center ml-3">
-            <p className="font-semibold text-[1.1rem]">Hello there</p>
-            <p className="text-[0.9rem] font-light opacity-50">
-              {userData?.name}
-            </p>
+        <div className="flex w-full">
+          <div className="flex justify-center ml-3">
+            <img src={userData?.avatar || "/default-avatar.png"} className="h-12 w-12 rounded-full object-cover border shrink-0"/>
+            <div className="flex flex-col ml-3">
+              <p className="font-semibold text-[1.1rem]">Hello</p>
+              <p className="text-gray-300">{userData?.name}!</p>
+            </div>
           </div>
         </div>
 
