@@ -42,16 +42,16 @@ export default function Login() {
                         {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
                     </span>
                 </div>
-                <div className="flex items-center justify-between mt-3">
-                    <p className="text-[0.9rem] text-blue-400">Forgot your password?</p>
+                <div className="text-[0.9rem] flex items-center justify-between mt-3">
+                    <p className="text-blue-400">Forgot your password?</p>
                     <span className="text-blue-400 underline cursor-pointer">Click here</span>
                 </div>
                 <button disabled={loading} className={`w-full mt-5 cursor-pointer h-10 text-white rounded-lg flex items-center justify-center gap-1 transition-all duration-200 group ${loading ? "bg-blue-400" : "bg-blue-500 hover:bg-blue-600"}`} onClick={handleLogin}>
                     {loading ? "Logging in" : "Log in"}
                     <ArrowRight className="h-4 text-white transition-all duration-200 group-hover:translate-x-1" />
                 </button>
-                <div className="flex items-center justify-between mt-3">
-                    <p className="text-[0.9rem] text-blue-400">
+                <div className="flex items-center justify-between text-[0.9rem] mt-3">
+                    <p className="text-blue-400">
                         Don't have an account?
                     </p>
                     <span className="underline cursor-pointer text-blue-400" onClick={() => router.push('/auth/register')}>
