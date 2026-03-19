@@ -1,5 +1,6 @@
 "use client";
 
+import { useAppContext } from "@/context/AppContext";
 import axios from "axios";
 import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -12,17 +13,14 @@ export default function Register() {
 
     const [step, setStep] = useState<number>(1);
     const [loading, setLoading] = useState<boolean>(false);
-
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
-
+    const { refreshAuth } = useAppContext();
     const [name, setName] = useState<string>("");
     const [surname, setSurname] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [phoneNumber, setPhone] = useState<string>("");
-
     const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
-
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
 
@@ -31,45 +29,69 @@ export default function Register() {
     const otpValue = otp.join("");
 
     const validateStep = () => {
-
         if (step === 1) {
             if (!name.trim()) {
-                toast.error("First name is required");
+                toast.error("Name is required");
+                return false;
+            }
+            if (name.length > 50) {
+                toast.error("Name cannot exceed 50 characters");
                 return false;
             }
             if (!surname.trim()) {
-                toast.error("Last name is required");
+                toast.error("Surname is required");
+                return false;
+            }
+            if (surname.length > 50) {
+                toast.error("Surname cannot exceed 50 characters");
                 return false;
             }
             if (!email.trim()) {
                 toast.error("Email is required");
                 return false;
             }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                toast.error("Invalid email address");
+                return false;
+            }
             if (!phoneNumber.trim()) {
                 toast.error("Phone number is required");
                 return false;
             }
-
-            if (!/^\S+@\S+\.\S+$/.test(email)) {
-                toast.error("Invalid email format");
+            if (phoneNumber.length < 10) {
+                toast.error("Phone number must be at least 10 digits");
                 return false;
             }
         }
-
         if (step === 2) {
             if (otpValue.length !== 6) {
                 toast.error("Enter complete OTP");
                 return false;
             }
         }
-
         if (step === 3) {
             if (!password) {
                 toast.error("Password is required");
                 return false;
             }
-            if (password.length < 6) {
-                toast.error("Password must be at least 6 characters");
+            if (password.length < 8) {
+                toast.error("Password must be at least 8 characters");
+                return false;
+            }
+            if (!/[A-Z]/.test(password)) {
+                toast.error("Password must include one uppercase letter");
+                return false;
+            }
+            if (!/[a-z]/.test(password)) {
+                toast.error("Password must include one lowercase letter");
+                return false;
+            }
+            if (!/[0-9]/.test(password)) {
+                toast.error("Password must include one number");
+                return false;
+            }
+            if (!/[^A-Za-z0-9]/.test(password)) {
+                toast.error("Password must include one special character");
                 return false;
             }
             if (password !== confirmPassword) {
@@ -124,6 +146,7 @@ export default function Register() {
             );
             if (data.success) {
                 toast.success("Registered successfully");
+                await refreshAuth();
                 const redirect = new URLSearchParams(window.location.search).get("redirect") || "/";
                 router.push(redirect);
                 return;

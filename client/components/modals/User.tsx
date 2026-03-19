@@ -18,6 +18,7 @@ export default function User() {
             const { data } = await axios.post(BACKEND_URL + '/api/auth/logout', {}, { withCredentials: true });
             if (data.success) {
                 toast.success("Logged out successfully");
+                setOpen(false);
                 setIsLoggedIn(false);
                 setUserData(null);
             }
