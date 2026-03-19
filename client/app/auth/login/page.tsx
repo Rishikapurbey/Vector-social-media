@@ -1,7 +1,7 @@
 "use client"
 
 import { ArrowRight, Eye, EyeOff } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -13,6 +13,8 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const searchParams = useSearchParams();
+    const redirect = searchParams.get("redirect") || "/";
 
     const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
@@ -23,7 +25,7 @@ export default function Login() {
             const { data } = await axios.post(BACKEND_URL + '/api/auth/login', { email, password }, { withCredentials: true });
             if (data.success) {
                 toast.success("Logged in successfully");
-                router.push('/');
+                router.push(redirect);
                 return;
             } else {
                 toast.warn(data.message);
@@ -41,16 +43,20 @@ export default function Login() {
         }
     }
 
+    const handleGoogleLogin = () => {
+        window.location.href = `${BACKEND_URL}/api/auth/google?redirect=${redirect}`;
+    };
+
     return (
         <div className="flex flex-col-reverse md:flex-row md:h-screen">
             <div className="w-full md:w-[30%] p-7">
                 <div className="md:hidden flex items-center justify-center gap-2 mb-5 md:mb-0">
-                    <img src="/vector.png" alt="" className="h-10 w-10 rounded-lg"/>
+                    <img src="/vector.png" alt="" className="h-10 w-10 rounded-lg" />
                     <p className="text-blue-500 font-semibold text-[1.5rem]">Vector</p>
                 </div>
                 <p className="font-semibold text-blue-500 text-[1.2rem] md:text-[1.5rem]">Welcome to Vector</p>
                 <p className="text-gray-500 mt-3 mb-5">Log in to get right back in</p>
-                <button onClick={() => { window.location.href = BACKEND_URL+'/api/auth/google'; }} className="flex items-center justify-center cursor-pointer transition-all duration-200 gap-2 border h-10 rounded-lg w-full bg-blue-50 hover:bg-gray-100">
+                <button onClick={handleGoogleLogin} className="flex items-center justify-center cursor-pointer transition-all duration-200 gap-2 border h-10 rounded-lg w-full bg-blue-50 hover:bg-gray-100">
                     <img src="/Google.png" alt="" className="h-5" />
                     Continue with Google
                 </button>

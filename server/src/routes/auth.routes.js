@@ -12,7 +12,14 @@ authRouter.post('/logout', logout);
 authRouter.get('/me', authMiddleware, getMe);
 
 //oAuth
-authRouter.get("/google", passport.authenticate("google", {scope: ["profile", "email"], session: false}));
-authRouter.get("/google/callback", passport.authenticate("google", {session: false, failureRedirect: "/auth/login"}), googleAuthCallback);
+authRouter.get("/google", (req, res, next) => {
+    const redirect = req.query.redirect || "/";
+    passport.authenticate("google", {
+        scope: ["profile", "email"],
+        session: false,
+        state: redirect,
+    })(req, res, next);
+});
+authRouter.get("/google/callback", passport.authenticate("google", { session: false, failureRedirect: "/auth/login" }), googleAuthCallback);
 
 export default authRouter;

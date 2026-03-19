@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import User from "../modals/User";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -66,15 +67,11 @@ export default function Navbar() {
             <>
               {!loading && (
                 <>
-                  {isLoggedIn ? (
-                    <button onClick={handleLogout} className="hidden md:inline-flex btn-secondary py-2 px-4">
-                      Sign out
-                    </button>
-                  ) : (
-                    <Link href="/logout"  className="hidden md:inline-flex btn-secondary py-2 px-4">
-                      Sign in
+                  {!isLoggedIn &&
+                    <Link href="/auth/login" className="hidden md:inline-flex btn-secondary py-2 px-4">
+                      Log in
                     </Link>
-                  )}
+                  }
                 </>
               )}
               <Link href="/builder" className="btn-primary py-2 px-4">
@@ -92,6 +89,9 @@ export default function Navbar() {
               )}
             </svg>
           </button>
+        </div>
+        <div className="ml-5">
+          <User />
         </div>
       </div>
 

@@ -38,7 +38,6 @@ export default function Builder() {
     <div className="min-h-screen flex flex-col bg-gray-50">
 
       <div className="flex-1 flex flex-col">
-        {/* Header */}
         <div className="bg-white border-b border-gray-200 px-6 py-2">
           <div className="max-w-screen-2xl mx-auto flex items-center justify-between">
             <Link

@@ -28,7 +28,60 @@ export default function Register() {
 
     const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL!;
 
+    const otpValue = otp.join("");
+
+    const validateStep = () => {
+
+        if (step === 1) {
+            if (!name.trim()) {
+                toast.error("First name is required");
+                return false;
+            }
+            if (!surname.trim()) {
+                toast.error("Last name is required");
+                return false;
+            }
+            if (!email.trim()) {
+                toast.error("Email is required");
+                return false;
+            }
+            if (!phoneNumber.trim()) {
+                toast.error("Phone number is required");
+                return false;
+            }
+
+            if (!/^\S+@\S+\.\S+$/.test(email)) {
+                toast.error("Invalid email format");
+                return false;
+            }
+        }
+
+        if (step === 2) {
+            if (otpValue.length !== 6) {
+                toast.error("Enter complete OTP");
+                return false;
+            }
+        }
+
+        if (step === 3) {
+            if (!password) {
+                toast.error("Password is required");
+                return false;
+            }
+            if (password.length < 6) {
+                toast.error("Password must be at least 6 characters");
+                return false;
+            }
+            if (password !== confirmPassword) {
+                toast.error("Passwords do not match");
+                return false;
+            }
+        }
+        return true;
+    };
+
     const nextStep = () => {
+        if (!validateStep()) return;
         setStep((prev) => prev + 1);
     };
 
@@ -37,14 +90,10 @@ export default function Register() {
     };
 
     const handleOtpChange = (value: string, index: number) => {
-
         if (!/^[0-9]?$/.test(value)) return;
-
         const newOtp = [...otp];
         newOtp[index] = value;
-
         setOtp(newOtp);
-
         if (value && index < 5) {
             const nextInput = document.getElementById(`otp-${index + 1}`) as HTMLInputElement | null;
             nextInput?.focus();
@@ -52,28 +101,36 @@ export default function Register() {
     };
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>, index: number) => {
-
         if (e.key === "Backspace" && !otp[index] && index > 0) {
             const prevInput = document.getElementById(`otp-${index - 1}`) as HTMLInputElement | null;
             prevInput?.focus();
         }
     };
 
-    const otpValue = otp.join("");
+    const handleGoogleLogin = () => {
+        const redirect = new URLSearchParams(window.location.search).get("redirect") || "/";
+        window.location.href = `${BACKEND_URL}/api/auth/google?redirect=${redirect}`;
+    };
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!validateStep()) return;
         try {
             setLoading(true);
-            const {data} = await axios.post(BACKEND_URL + '/api/auth/register', {name, surname, email, phoneNumber, password}, {withCredentials: true});
-            if(data.success) {
+            const { data } = await axios.post(
+                BACKEND_URL + '/api/auth/register',
+                { name, surname, email, phoneNumber, password },
+                { withCredentials: true }
+            );
+            if (data.success) {
                 toast.success("Registered successfully");
-                router.push('/');
+                const redirect = new URLSearchParams(window.location.search).get("redirect") || "/";
+                router.push(redirect);
                 return;
             } else {
                 toast.warn(data.message);
             }
-        } catch(error: any) {
+        } catch (error: any) {
             if (error.response?.data?.errors) {
                 toast.error(error.response.data.errors[0].message);
             } else if (error.response?.data?.message) {
@@ -94,7 +151,7 @@ export default function Register() {
                 <p className="text-blue-500 text-[1.5rem] font-semibold">Welcome to Vector</p>
                 <p className="text-gray-500 mt-3 mb-5">Register to dive right in</p>
 
-                <button className="flex items-center justify-center cursor-pointer transition-all duration-200 gap-2 border h-10 rounded-lg w-full bg-blue-50 hover:bg-gray-100">
+                <button onClick={handleGoogleLogin} className="flex items-center justify-center cursor-pointer transition-all duration-200 gap-2 border h-10 rounded-lg w-full bg-blue-50 hover:bg-gray-100">
                     <img src="/Google.png" alt="" className="h-5" />
                     Continue with Google
                 </button>
@@ -116,7 +173,7 @@ export default function Register() {
                                     type="text"
                                     placeholder="demo"
                                     className="outline-none h-10 bg-blue-500/5 w-full rounded-md p-3 my-2"
-                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+                                    onChange={(e) => setName(e.target.value)}
                                 />
                             </div>
 
@@ -126,7 +183,7 @@ export default function Register() {
                                     type="text"
                                     placeholder="user"
                                     className="outline-none h-10 bg-blue-500/5 w-full rounded-md p-3 my-2"
-                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setSurname(e.target.value)}
+                                    onChange={(e) => setSurname(e.target.value)}
                                 />
                             </div>
 
@@ -136,7 +193,7 @@ export default function Register() {
                                     type="email"
                                     placeholder="demo@gmail.com"
                                     className="outline-none h-10 bg-blue-500/5 w-full rounded-md p-3 my-2"
-                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                                    onChange={(e) => setEmail(e.target.value)}
                                 />
                             </div>
 
@@ -146,7 +203,7 @@ export default function Register() {
                                     type="tel"
                                     placeholder="+00 00000 00000"
                                     className="outline-none h-10 bg-blue-500/5 w-full rounded-md p-3 my-2"
-                                    onChange={(e: ChangeEvent<HTMLInputElement>) => setPhone(e.target.value)}
+                                    onChange={(e) => setPhone(e.target.value)}
                                 />
                             </div>
 
@@ -163,7 +220,6 @@ export default function Register() {
                         <p className="mt-4">Enter OTP</p>
 
                         <div className="flex gap-2 mt-3 justify-between">
-
                             {otp.map((digit, index) => (
                                 <input
                                     key={index}
@@ -172,17 +228,13 @@ export default function Register() {
                                     value={digit}
                                     maxLength={1}
                                     className="w-12 h-12 text-center text-lg font-semibold rounded-md bg-blue-500/5 outline-none"
-                                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                                        handleOtpChange(e.target.value, index)
-                                    }
+                                    onChange={(e) => handleOtpChange(e.target.value, index)}
                                     onKeyDown={(e) => handleKeyDown(e, index)}
                                 />
                             ))}
-
                         </div>
 
                         <div className="flex gap-3 mt-6">
-
                             <button className="w-full border h-10 rounded-lg" onClick={prevStep}>
                                 Back
                             </button>
@@ -190,7 +242,6 @@ export default function Register() {
                             <button className="w-full bg-blue-500 hover:bg-blue-600 text-white h-10 rounded-lg" onClick={nextStep}>
                                 Verify OTP
                             </button>
-
                         </div>
                     </>
                 )}
@@ -200,36 +251,31 @@ export default function Register() {
                         <p className="mt-2">Set a password</p>
 
                         <div className="relative">
-
                             <input
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Enter a password"
                                 className="outline-none h-10 bg-blue-500/5 w-full rounded-md p-3 pr-10 my-2"
-                                onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}/>
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
 
                             <span className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer" onClick={() => setShowPassword(!showPassword)}>
                                 {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
                             </span>
-
                         </div>
 
                         <p>Confirm your password</p>
 
                         <div className="relative">
-
                             <input
                                 type={showConfirmPassword ? "text" : "password"}
                                 placeholder="Confirm your password"
                                 className="outline-none h-10 bg-blue-500/5 w-full rounded-md p-3 pr-10 my-2"
-                                onChange={(e: ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)}/>
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                            />
 
-                            <span
-                                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
-                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                            >
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
                                 {showConfirmPassword ? <Eye size={18} /> : <EyeOff size={18} />}
                             </span>
-
                         </div>
 
                         <button
@@ -239,7 +285,6 @@ export default function Register() {
                             {loading ? "Creating.." : "Create account"}
 
                             <ArrowRight className="h-4 transition-all duration-200 group-hover:translate-x-1" />
-
                         </button>
 
                         <button className="w-full border h-10 rounded-lg mt-3" onClick={prevStep}>
@@ -250,10 +295,7 @@ export default function Register() {
 
                 <p className="text-[0.9rem] mt-4 text-blue-400 flex justify-between">
                     Already have an account?
-                    <span
-                        className="underline cursor-pointer"
-                        onClick={() => router.push("/auth/login")}
-                    >
+                    <span className="underline cursor-pointer" onClick={() => router.push("/auth/login")}>
                         Log in
                     </span>
                 </p>
