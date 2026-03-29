@@ -74,7 +74,7 @@ export default function Navbar() {
                   }
                 </>
               )}
-              <Link href="/builder" className="btn-primary py-2 px-4">
+              <Link href="/builder" className="btn-primary hidden md:flex py-2 px-4">
                 Get started
               </Link>
             </>
