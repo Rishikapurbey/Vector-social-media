@@ -40,7 +40,7 @@ export default function Features() {
     const Icon = current.icon;
 
     return (
-        <section className="py-20 px-6 bg-blue-500 relative overflow-hidden">
+        <section className="py-10 md:py-20 px-6 bg-blue-500 relative overflow-hidden">
 
             {/* subtle glow */}
             <div className="absolute inset-0 pointer-events-none">

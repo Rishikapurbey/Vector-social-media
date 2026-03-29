@@ -6,7 +6,7 @@ import { demoResumeData } from "@/utils/demoData";
 
 export default function CTA() {
     return (
-        <section id="pricing" className="py-32 px-6 bg-white overflow-hidden">
+        <section id="pricing" className="py-14 md:py-32 px-6 bg-white overflow-hidden">
 
             <div className="max-w-6xl mx-auto relative">
 
@@ -33,17 +33,17 @@ export default function CTA() {
                             Build, analyze, and refine your resume with a system designed to actually get results — not just look good.
                         </p>
 
-                        <div className="flex items-center gap-6">
+                        <div className="flex flex-col md:flex-row items-center gap-6">
                             <Link
                                 href="/builder"
-                                className="btn-primary text-white rounded-xl font-medium text-base transition-all shadow-lg"
+                                className="btn-primary w-full md:w-fit text-white rounded-xl font-medium text-base transition-all shadow-lg"
                             >
                                 Create Resume →
                             </Link>
 
                             <Link
                                 href="/analyze"
-                                className="text-neutral-700 font-medium btn-secondary transition-all"
+                                className="text-neutral-700 w-full md:w-fit font-medium btn-secondary transition-all"
                             >
                                 Analyze instead
                             </Link>
@@ -93,10 +93,7 @@ export default function CTA() {
 
                                 {/* RIGHT RESUME */}
                                 <div className="col-span-3 p-4 overflow-hidden">
-                                    <div
-                                        className="scale-[0.45] origin-top-left"
-                                        style={{ width: "222%", transformOrigin: "top left" }}
-                                    >
+                                    <div className="scale-[0.45] origin-top-left" style={{ width: "222%", transformOrigin: "top left" }}>
                                         <ResumeTemplate data={demoResumeData} />
                                     </div>
                                 </div>

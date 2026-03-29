@@ -23,7 +23,7 @@ const steps = [
 
 export default function Working() {
   return (
-    <section id="how-it-works" className="py-28 px-6 bg-white">
+    <section id="how-it-works" className="py-14 md:py-28 px-6 bg-white">
       <div className="max-w-5xl mx-auto">
 
         {/* HEADER */}

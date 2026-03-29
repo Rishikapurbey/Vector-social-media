@@ -8,7 +8,7 @@ export default function Preview() {
     return (
         <section
             id="preview"
-            className="py-24 px-6 bg-blue-500 text-white relative overflow-hidden"
+            className="pt-10 md:pt-0 md:py-24 px-6 bg-blue-500 text-white relative overflow-hidden"
         >
 
             <div className="relative z-10 flex flex-col w-full md:flex-row items-center">
