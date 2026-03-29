@@ -4,6 +4,7 @@ import authRouter from "./src/routes/auth.routes.js";
 import connectDB from "./src/config/mongodb.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import resumeRouter from "./src/routes/resume.routes.js";
 
 const app = express();
 app.use(express.json());
@@ -18,6 +19,7 @@ app.use(cors({
 await connectDB();
 
 app.use("/api/auth", authRouter);
+app.use("/api/resume", resumeRouter);
 
 app.get("/", (req, res) => {
   res.send("Server running");
